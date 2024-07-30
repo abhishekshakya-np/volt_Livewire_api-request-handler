@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
 
 class PostController extends Controller
 {
-    public function getPost()
+    /**
+     * @return Application|Factory|View|\Illuminate\Foundation\Application|null
+     * @throws GuzzleException
+     */
+    public function getPost(): \Illuminate\Foundation\Application|View|Factory|Application|null
     {
         // No API key needed for json placeholder
         $apiKey = '';
@@ -27,14 +33,11 @@ class PostController extends Controller
             $data = json_decode($response->getBody(), true);
 
             // Handle the retrieved post-data as needed (e.g., pass it to a view)
-            return $this->view('post', ['postData' => $data]);
+            return view('post', ['postData' => $data]);
         } catch (\Exception $e) {
             // Handle any errors that occur during the API request
             return view('api_error', ['error' => $e->getMessage()]);
         }
     }
 
-    private function view(string $string, array $array)
-    {
-    }
 }
